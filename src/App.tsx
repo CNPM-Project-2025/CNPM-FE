@@ -1,17 +1,19 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+// import reactLogo from './assets/react.svg'
+// import viteLogo from '/vite.svg'
 import './App.css'
-
+import Home from './components/pages/Home'
 // import MenuPage from "./components/pages/MenuPage";
-import MenuPage from "./components/pages/MenuPage";
+// import MenuPage from "./components/pages/MenuPage";
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <div>
+
+      <Home></Home>
+      {/* <div>
 
         <div>
           <MenuPage/>
@@ -35,7 +37,7 @@ function App() {
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
-      </p>
+      </p> */}
     </>
   )
 }
