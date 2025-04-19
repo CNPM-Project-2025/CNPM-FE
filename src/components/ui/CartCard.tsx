@@ -64,7 +64,9 @@ export default function Cart({
           // </div>
         ))
       ) : (
-        <p style={{ color: "#777" }}>Giỏ hàng trống</p>
+        <p style={{ color: "#777", display: "flex", justifyContent: "center" }}>
+          Giỏ hàng trống
+        </p>
       )}
     </div>
   );

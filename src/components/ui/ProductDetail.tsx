@@ -119,7 +119,12 @@ const ItemPopup: React.FC<ItemPopupProps> = ({
 
                 <div className="option">
                   <input type="checkbox" id="Vegetables-checkbox" />
-                  <label htmlFor="Vegetables-checkbox">Vegetables</label>
+                  <label
+                    htmlFor="Vegetables-checkbox"
+                    style={{ marginLeft: "5px" }}
+                  >
+                    Vegetables
+                  </label>
                 </div>
               </div>
               <button

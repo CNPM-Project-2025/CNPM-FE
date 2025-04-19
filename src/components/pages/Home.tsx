@@ -143,7 +143,6 @@ function Home() {
                     sldec={() => setsl(sl - 1)}
                     inc={() => increaseQuantity(product.id)}
                     dec={() => decreaseQuantity(product.id)}
-                    //   quantity={product.}
                   />
                 ))}
               </div>
