@@ -55,7 +55,13 @@ const ItemCard: React.FC<ItemCardProps> = ({
         </div>
         <div className="item-card-group">
           <span>{price.toLocaleString()} VNĐ</span>
-          <button className="f-center background-red" onClick={addToCart}>
+          <button
+            className="f-center background-red"
+            onClick={(e) => {
+              e.stopPropagation();
+              addToCart();
+            }}
+          >
             <FontAwesomeIcon icon={faCartShopping} style={{ color: "white" }} />
           </button>
         </div>

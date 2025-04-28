@@ -72,6 +72,10 @@ export function useCart() {
     return getTotalPrice() * tax;
   };
 
+  const getTotalPriceInclTax = () => {
+    return getTotalPrice() - getTotalTax();
+  };
+
   // ❌ Xóa sản phẩm khỏi giỏ hàng
   const removeFromCart = (id: number) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
@@ -86,5 +90,6 @@ export function useCart() {
     getTotalTax,
     removeFromCart,
     addToCartbySL,
+    getTotalPriceInclTax,
   };
 }

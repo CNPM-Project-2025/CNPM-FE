@@ -281,6 +281,11 @@ button {
   border-radius: 10px;
   display: flex;
   justify-content: center;
+  width: 100%;
+}
+.payment:active,
+.btn-payment:active {
+  transform: scale(0.99);
 }
 
 /* popup */
@@ -379,7 +384,8 @@ button {
   z-index: 1000;
 }
 
-.popup-content {
+.popup-content,
+.popupPayment-content {
   background: white;
   border-radius: 8px;
   width: 90%;
@@ -387,7 +393,7 @@ button {
   position: relative;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
-  animation: fadeIn 0.3s ease-in-out;
+  animation: slideDown 0.4s ease-in-out;
 }
 
 .popup-footer {
@@ -398,7 +404,7 @@ button {
   justify-content: center;
   font-size: 20px;
   padding: 10px;
-  margin-top: 15px;
+  margin: 15px 0;
   border-radius: 10px;
 }
 
@@ -414,13 +420,82 @@ h3 {
   font-size: 18px !important;
 }
 
-@keyframes fadeIn {
+@keyframes slideDown {
   from {
     opacity: 0;
-    transform: scale(0.9);
+    transform: translateY(-100px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
   }
+}
+
+/* payment */
+.payment-row,
+.payment-header__body {
+  display: flex;
+  justify-content: space-around;
+  padding: 5px;
+}
+
+.payment-header__body {
+  border-bottom: 1px solid;
+}
+
+.payment-row span,
+.payment-header__body span {
+  flex: 1;
+}
+
+.total-payment {
+  border: 1px solid #999;
+  border-radius: 10px;
+}
+
+.total-payment span {
+  margin: 0 5px;
+}
+
+.paymentMethod__totaltotal {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.paymentMethod {
+  display: flex;
+  padding: 10px;
+}
+.paymentMethod h3,
+.paymentMethod p {
+  margin: 0;
+}
+.paymentMethod div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.payment-popup__body,
+.payment-popup__footer {
+  padding: 0 24px;
+  margin-bottom: 5px;
+}
+
+.payment-popup__footer {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-payment {
+  border-radius: 10px;
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  padding: 15px;
+}
+
+#payment-method {
+  border-radius: 5px;
 }

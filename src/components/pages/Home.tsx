@@ -1,4 +1,4 @@
-import { faHouse } from "@fortawesome/free-solid-svg-icons";
+import { faHouse, faSlash } from "@fortawesome/free-solid-svg-icons";
 import "/src/assets/styles/Home.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CategoryCard from "../ui/CategoryCard";
@@ -12,6 +12,7 @@ import CartCard from "../ui/CartCard";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons/faCartShopping";
 import { useState } from "react";
 // import { useCart } from "../../hooks/useCart"; // Import hook
+import PaymentPopup from "../ui/Payment";
 
 function Home() {
   const { products } = useFetchProducts();
@@ -25,7 +26,18 @@ function Home() {
     getTotalPrice,
     getTotalTax,
     removeFromCart,
+    getTotalPriceInclTax,
   } = useCart(); // Sử dụng useCart
+
+  const [isPaymentPopup, setIsPaymentPopup] = useState(false);
+  const openPaymentPopup = () => {
+    if (cart.length === 0) {
+      return;
+    }
+    setIsPaymentPopup(true);
+  };
+  const closePaymentPopup = () => setIsPaymentPopup(false);
+
   return (
     <>
       <div style={{ display: "flex", height: "92vh", overflow: "hidden" }}>
@@ -186,10 +198,19 @@ function Home() {
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               (Incl.tax 10% = {getTotalTax().toLocaleString()})
             </div>
-            <div className="payment">PAYMENT</div>
+            <button className="payment" onClick={openPaymentPopup}>
+              PAYMENT
+            </button>
           </div>
         </div>
       </div>
+      {isPaymentPopup && (
+        <PaymentPopup
+          getTotalPriceInclTax={getTotalPriceInclTax}
+          closePaymentPopup={closePaymentPopup}
+          cart={cart}
+        />
+      )}
     </>
   );
 }
