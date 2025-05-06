@@ -5,6 +5,7 @@ import Home from './components/pages/Home'
 import NotFound from './components/pages/NotFound'
 import Payment from './components/pages/Payment'
 import NotificationToast from "./components/ui/NotificationToast"; 
+import AdminRoutes from './routes/AdminRoutes';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/thanh-toan" element={<Payment />} /> {/* Route cho trang chính */}
           <Route path="*" element={<NotFound />} /> {/* Route mặc định cho 404 */}
+          <Route path="/admin/*" element={<AdminRoutes />} />
         </Routes>
       </div>
     </>

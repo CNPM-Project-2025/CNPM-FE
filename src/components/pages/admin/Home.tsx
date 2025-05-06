@@ -1,0 +1,19 @@
+import { useUser } from "../../../context/UserContext";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../../assets/styles/LeftMenu.css';
+
+function Home() {
+
+    const { user } = useUser();
+
+    return (
+
+        <div style={{height:"1000px", overflowY:"auto"}}>
+            <div>Welcome to the Admin Home Page</div>
+            <h2>Chào admin: {user?.name}</h2>
+        </div>
+
+    );
+}
+
+export default Home;
