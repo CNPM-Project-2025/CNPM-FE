@@ -2,6 +2,8 @@
 import { Route, Routes } from 'react-router-dom'
 
 import Home from './components/pages/Home'
+import HomeMobile from './components/pages/Homemobile'
+
 import NotFound from './components/pages/NotFound'
 import Payment from './components/pages/Payment'
 import NotificationToast from "./components/ui/NotificationToast"; 
@@ -14,7 +16,8 @@ function App() {
       <div className="w-100">
       <NotificationToast />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomeMobile />} />
+          <Route path="/home" element={<Home />} /> {/* Route cho trang chính */}
           <Route path="/thanh-toan" element={<Payment />} /> {/* Route cho trang chính */}
           <Route path="*" element={<NotFound />} /> {/* Route mặc định cho 404 */}
           <Route path="/admin/*" element={<AdminRoutes />} />

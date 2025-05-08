@@ -2,18 +2,61 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../../context/UserContext';
 
+type LoginForm = {
+  email: string;
+  password: string;
+}
+
 const Login = () => {
   const { setUser } = useUser();
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
+
+  const [loginForm, setLoginForm] = useState<LoginForm>({
+    email: '',
+    password: '',
+  });
+
   const navigate = useNavigate();
 
+  const fetchauth = async () => {
+    // Gửi post loginForm lên server
+    const response = await fetch('http://localhost:9999/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(loginForm),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      // Lưu thông tin người dùng vào context
+      setUser({
+        avatar: data.user.avatar,
+        role: data.user.role,
+        phone: data.user.phone,
+        first_name: data.user.first_name,
+        last_name: data.user.last_name,
+        created_at: data.user.created_at,
+        email: data.user.email,
+        auth: data.user.auth,
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+      });
+      // Chuyển hướng đến trang Admin sau khi login thành công
+      navigate('/admin/home');
+    } else {
+      alert('Đăng nhập không thành công!');
+    }
+    if (response.ok) {
+      console.log('Login successful:', data);
+    }
+  };
+
   const handleLogin = () => {
-    if (name && role) {
-      const user = { name, role };
-      setUser(user); // Lưu thông tin người dùng vào context
-      localStorage.setItem('user', JSON.stringify(user)); // Lưu vào localStorage
-      navigate('/admin/home'); // Chuyển hướng đến trang Admin sau khi login thành công
+    if (loginForm.email && loginForm.password) {
+      fetchauth();
+      // navigate('/admin/home'); // Chuyển hướng đến trang Admin sau khi login thành công
     } else {
       alert('Vui lòng nhập đầy đủ thông tin!');
     }
@@ -24,22 +67,22 @@ const Login = () => {
       <h2>Đăng nhập</h2>
       <div style={styles.form}>
         <div>
-          <label htmlFor="name">Tên:</label>
+          <label htmlFor="email">Email:</label>
           <input
             type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            id="email"
+            value={loginForm.email}
+            onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
             style={styles.input}
           />
         </div>
         <div>
-          <label htmlFor="role">Vai trò:</label>
+          <label htmlFor="pass">Pass :</label>
           <input
-            type="text"
-            id="role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
+            type="password"
+            id="pass"
+            value={loginForm.password}
+            onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
             style={styles.input}
           />
         </div>

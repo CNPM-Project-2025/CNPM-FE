@@ -1,0 +1,122 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+
+.home-info {
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+}
+
+.home-info span {
+    color: chocolate;
+    font-weight: bold;
+}
+
+.doanhmuc-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 10px;
+}
+
+.doanhmuc-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 100px;
+    height: 100px;
+}
+
+.doanhmuc-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+}
+
+.home-content-list {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    gap: 10px;
+}
+
+.home-content-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid black;
+    margin: 5px;
+}
+
+
+.home-content-item img {
+    max-width: 200px;
+    max-height: 200px;
+    /* min-width: 100px;
+    min-height: 100px; */
+}
+
+.home-content-item-name {
+    text-align: start;
+}
+
+.price-icon {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* style.css */
+.cart-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    padding: 12px 16px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 999;
+}
+
+.cart-bar button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+@media screen and (min-width: 768px) {
+    .cart-bar {
+    position: relative;
+      display: flex;
+      flex-direction: column;
+      width: 500px;
+      height: 100vh;
+    }
+
+    .container-home {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .home{
+        display: flex;
+        flex-direction: row;
+    }
+   
+  }
