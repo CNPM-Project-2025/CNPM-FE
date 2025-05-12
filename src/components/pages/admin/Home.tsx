@@ -10,7 +10,7 @@ function Home() {
 
         <div style={{height:"1000px", overflowY:"auto"}}>
             <div>Welcome to the Admin Home Page</div>
-            <h2>Chào admin: {user?.name}</h2>
+            <h2>Chào admin: {user?.last_name}</h2>
         </div>
 
     );

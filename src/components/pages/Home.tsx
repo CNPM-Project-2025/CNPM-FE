@@ -1,17 +1,15 @@
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
-import "/src/assets/styles/Home.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CategoryCard from "../ui/CategoryCard";
-import ProductDetail from "../ui/ProductDetail";
-import ItemCard from "../ui/ItemCard";
 import { useFetchProducts } from "../../hooks/useFetchProducts";
-// import { FastFoodItem } from '../../types/FastFoodItem';
-// import { useState } from 'react';
 import { useCart } from "../../hooks/useCart";
-import CartCard from "../ui/CartCard";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons/faCartShopping";
 import { useState } from "react";
-// import { useCart } from "../../hooks/useCart"; // Import hook
+
+import CategoryCard from "../ui/CategoryCard";
+import ItemCard from "../ui/ItemCard";
+import CartCard from "../ui/CartCard";
+
+import "/src/assets/styles/Home.css";
 
 function Home() {
   const { products } = useFetchProducts();
@@ -150,14 +148,15 @@ function Home() {
           </div>
         </div>
         <div
-          style={{
-            boxShadow: "-5px 0 10px rgba(0,0,0,0.2)",
-            width: "30%",
-            // backgroundColor: "blue",
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-          }}
+          // style={{
+          //   boxShadow: "-5px 0 10px rgba(0,0,0,0.2)",
+          //   width: "30%",
+          //   // backgroundColor: "blue",
+          //   display: "flex",
+          //   flexDirection: "column",
+          //   height: "100%",
+          // }}
+          className="cart_container"
         >
           <div className="cart_header" style={{ margin: "10px" }}>
             <div className="left_header">

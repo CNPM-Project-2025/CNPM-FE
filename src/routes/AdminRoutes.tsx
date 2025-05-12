@@ -9,6 +9,7 @@ import Product from '../components/pages/admin/Product';
 import Import from '../components/pages/admin/Import';
 import Statistics from '../components/pages/admin/Statistics';
 import Account from '../components/pages/admin/Account';
+import Category from '../components/pages/admin/Category';
 
 import { UserProvider } from "../context/UserContext";
 import Login from '../components/pages/admin/Login';
@@ -27,6 +28,7 @@ const AdminRoutes = () => {
           <Route path="statistics" element={<Statistics />} />
           <Route path="invoice" element={<Invoice />} />
           <Route path="account" element={<Account />} />
+          <Route path='category' element={<Category />} />
         </Route>
         <Route path="login" element={<Login />} />
       </Routes>

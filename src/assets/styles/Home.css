@@ -19,10 +19,14 @@
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
-  white-space: nowrap; /* Ngăn các phần tử xuống dòng */
-  padding-bottom: 8px; /* Tránh bị che khuất khi có thanh cuộn */
-  scrollbar-width: thin; /* Thu nhỏ thanh cuộn trên Firefox */
-  scrollbar-color: #ccc #f0f0f0; /* Màu thanh cuộn trên Firefox */
+  white-space: nowrap;
+  /* Ngăn các phần tử xuống dòng */
+  padding-bottom: 8px;
+  /* Tránh bị che khuất khi có thanh cuộn */
+  scrollbar-width: thin;
+  /* Thu nhỏ thanh cuộn trên Firefox */
+  scrollbar-color: #ccc #f0f0f0;
+  /* Màu thanh cuộn trên Firefox */
 }
 
 /*
@@ -141,7 +145,8 @@
   /* word-wrap: break-word; */
   /* white-space: normal; */
   text-align: start;
-  overflow-wrap: break-word; /* Cắt từ nếu quá dài */
+  overflow-wrap: break-word;
+  /* Cắt từ nếu quá dài */
   /* flex: 1; Đảm bảo nội dung giãn ra đủ */
 }
 
@@ -191,6 +196,7 @@
   font-size: 18px;
   /* color: red; */
 }
+
 /* .itemCart-name-price{
     display: flex;
     flex-direction: column;
@@ -419,8 +425,35 @@ h3 {
     opacity: 0;
     transform: scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+.cart_container {
+  box-shadow: rgba(0, 0, 0, 0.2) -5px 0px 10px;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* mobile */
+/* styles.css */
+@media (max-width: 768px) {
+
+  /* .payment-page {
+    padding: 10px;
+    font-size: 14px;
+  } */
+  .home_Header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .home_Content {
+    padding: 5px;
   }
 }
