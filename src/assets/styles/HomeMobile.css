@@ -60,13 +60,15 @@
 
 
 .home-content-item img {
-    max-width: 200px;
-    max-height: 200px;
+    width: 150px;
+    height: 150px;
     /* min-width: 100px;
     min-height: 100px; */
 }
 
 .home-content-item-name {
+    width: 150px;
+    height: 54px;
     text-align: start;
 }
 
@@ -99,13 +101,68 @@
     border-radius: 4px;
 }
 
+.cart-detail-item {
+    display: flex;
+    padding: 10px;
+    gap: 5px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.cart-detail-item-icon {
+    width: 30px;
+    height: 30px;
+    border: 1px solid blanchedalmond;
+    border-radius: 10px;
+}
+
+.cart-detail{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.cart-detail-list{
+    flex: 1;
+}
+
+.modal-cart {
+    width: 100%;
+    height: 80vh;
+    background-color: white;
+    padding: 10px;
+    border-radius: 12px 12px 0 0;
+    z-index: 1000;
+    position: relative;
+    overscroll-behavior: contain;
+    touch-action: none;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 60px;
+    background-color: rgba(0, 0, 0, 0.3);
+    /* Mờ nền */
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    /* để modal trồi từ dưới lên */
+}
+
+
 @media screen and (min-width: 768px) {
     .cart-bar {
-    position: relative;
-      display: flex;
-      flex-direction: column;
-      width: 500px;
-      height: 100vh;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        /* flex-direction: column; */
+        width: 500px;
+        height: 60px;
     }
 
     .container-home {
@@ -114,9 +171,21 @@
         flex: 1;
     }
 
-    .home{
+    .home {
         display: flex;
         flex-direction: row;
     }
-   
-  }
+
+    .modal-overlay {
+        position: relative;
+     
+        background-color: rgba(0, 0, 0, 0.3);
+        /* Mờ nền */
+        z-index: 999;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        /* để modal trồi từ dưới lên */
+    }
+
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../../context/UserContext';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 type LoginForm = {
   email: string;
@@ -66,17 +67,22 @@ const Login = () => {
     <div style={styles.container}>
       <h2>Đăng nhập</h2>
       <div style={styles.form}>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="text"
-            id="email"
-            value={loginForm.email}
-            onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
-            style={styles.input}
-          />
+        <div className='d-flex gap-3 justify-content-between align-items-center'>
+          <div>
+            <label htmlFor="email">Email:</label>
+          </div>
+          
+          <div>
+            <input
+              type="text"
+              id="email"
+              value={loginForm.email}
+              onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
+              style={styles.input}
+            />
+          </div>
         </div>
-        <div>
+        <div className='d-flex gap-3 justify-content-between align-items-center'>
           <label htmlFor="pass">Pass :</label>
           <input
             type="password"

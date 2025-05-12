@@ -12,24 +12,24 @@ const LeftMenu = () => {
   const {logout} = useUser();
 
   const isActive = (path: string) => location.pathname === path;
-
   // btn menu 
   const MenuBtn = ({
-    path,
+    paths,
     icon,
     label,
     onClick,
   }: {
-    path: string;
+    // path: string;
+    paths: string[];
     icon: React.ReactNode;
     label: string;
     onClick?: () => void; // Optional callback for custom actions like logout
   }) => {
-    const isActive = (path: string) => location.pathname === path;
+    const isActive = (paths: string[]) => paths.includes(location.pathname);
     return (
       <button
-        className={`btn-function ${isActive(path) ? 'btn-function-active' : ''}`}
-        onClick={() => onClick ? onClick() : navigate(path)}
+        className={`btn-function ${isActive(paths) ? 'btn-function-active' : ''}`}
+        onClick={() => onClick ? onClick() : navigate(paths[0])}
       >
         {icon}
         <span>{label}</span>
@@ -56,18 +56,18 @@ const LeftMenu = () => {
 
       {/* Nút chức năng */}
       <div className="d-flex flex-column gap-2 mb-3">
-        <MenuBtn path="/admin/home" icon={<Home size={18} />} label="Trang chủ" />
-        <MenuBtn path="/admin/info" icon={<Info size={18} />} label="Thông tin của tôi" />
-        <MenuBtn path="/admin/employee" icon={<User size={18} />} label="Quản lý nhân viên" />
-        <MenuBtn path="/admin/invoice" icon={<ScrollText size={18} />} label="Quản lý hóa đơn" />
-        <MenuBtn path="/admin/product" icon={<PackageSearch size={18} />} label="Quản lý sản phẩm" />
-        <MenuBtn path="/admin/import" icon={<Import size={18} />} label="Quản lý nhập hàng" />
-        <MenuBtn path="/admin/statistics" icon={<ChartNoAxesCombined size={18} />} label="Thống kê" />
+        <MenuBtn paths={["/admin/home"]} icon={<Home size={18} />} label="Trang chủ" />
+        <MenuBtn paths={["/admin/info"]} icon={<Info size={18} />} label="Thông tin của tôi" />
+        <MenuBtn paths={["/admin/employee"]} icon={<User size={18} />} label="Quản lý nhân viên" />
+        <MenuBtn paths={["/admin/invoice"]} icon={<ScrollText size={18} />} label="Quản lý hóa đơn" />
+        <MenuBtn paths={["/admin/product", "/admin/category"]} icon={<PackageSearch size={18} />} label="Quản lý sản phẩm" />
+        <MenuBtn paths={["/admin/import"]} icon={<Import size={18} />} label="Quản lý nhập hàng" />
+        <MenuBtn paths={["/admin/statistics"]} icon={<ChartNoAxesCombined size={18} />} label="Thống kê" />
       </div>
 
       {/* Nút Logout */}
       <div className="mt-auto">
-        <MenuBtn path="" icon={<LogOut size={18} />} label="Đăng xuất" onClick={handleLogout} />
+        <MenuBtn paths={["/admin/login"]} icon={<LogOut size={18} />} label="Đăng xuất" onClick={handleLogout} />
       </div>
     </div>
   );
