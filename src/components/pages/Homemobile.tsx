@@ -1,23 +1,41 @@
-import { Home, HomeIcon, LucideShoppingCart, X } from 'lucide-react'
+import { Home, HomeIcon, LucideShoppingCart, X, Search } from 'lucide-react'
 import { useEffect, useState } from 'react';
 import { categoryType, foodType } from '../../types/ProductTpye';
 import { useCart } from '../../hooks/useCart.tsx';
-import '../../assets/styles/HomeMobile.css';
 import { Button } from 'react-bootstrap';
 
+
+import '../../assets/styles/HomeMobile.css';
+import config from '../../config/config.ts';
+import { SyncLoader } from 'react-spinners';
 
 
 function HomeMobile() {
 
 
-    const url = 'http://192.168.16.92:9999/';
+    const url = config.API_URL;
     // var
-    const { cart, addToCart, increaseQuantity, decreaseQuantity, getTotalPrice , isLoading} = useCart();
+    const { cart, addToCart, increaseQuantity, decreaseQuantity, getTotalPrice, isLoading } = useCart();
     const [category, setCategory] = useState<categoryType[]>([]);
     const [food, setFood] = useState<foodType[]>([]);
     const [ishowModal, setShowModal] = useState(false);
+    const [keyword, setKeyword] = useState('');
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+    const [selectedCategory, setSelectedCategory] = useState<number>(0);
+    const [isLoadingProduct, setIsLoadingProduct] = useState(false);
     // fetch
 
+    const handleScroll = () => {
+        const nearBottom =
+            window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+        if (nearBottom) {
+            fetchMore(selectedCategory, keyword);
+            if (page < lastPage) {
+            setPage((prevPage) => prevPage + 1);
+            }
+        }
+    };
 
     const fetchCategory = async () => {
         const response = await fetch(`${url}category`);
@@ -28,13 +46,32 @@ function HomeMobile() {
         setCategory(data.data);
     };
 
-    const fetchFood = async (categoryId: number) => {
-        const response = await fetch(`${url}food/category/${categoryId}`);
+    const fetchFood = async (categoryId: number, keyword: string) => {
+        setIsLoadingProduct(true);
+        const response = await fetch(`${url}food?page=1&search=${keyword}&search_by=name&category=${categoryId}`);
         const data = await response.json();
         if (!response.ok) {
             throw new Error('Failed to fetch food');
         }
+        setLastPage(data.lastpage);
         setFood(data.data);
+        // delay 0.8s
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        setIsLoadingProduct(false);
+    }
+
+    const fetchMore = async (categoryId: number, keyword: string) => {
+        setIsLoadingProduct(true);
+        const response = await fetch(`${url}food?page=${page}&search=${keyword}&search_by=name&category=${categoryId}`);
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error('Failed to fetch food');
+        }
+        setLastPage(data.lastpage);
+        setFood(prevFood => [...prevFood, ...data.data]);
+        // delay 0.8s
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        setIsLoadingProduct(false);
     }
 
 
@@ -45,9 +82,11 @@ function HomeMobile() {
 
     useEffect(() => {
         if (category.length > 0) {
-            fetchFood(category[0].id);
+            fetchFood(selectedCategory, keyword);
+            window.addEventListener('scroll', handleScroll);
+            return () => window.removeEventListener('scroll', handleScroll);
         }
-    }, [category]);
+    }, [selectedCategory, page]);
 
     useEffect(() => {
         console.log('food', food);
@@ -70,6 +109,13 @@ function HomeMobile() {
     // }, [category]);
     // // handle
 
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+        // console.log('submit', keyword);
+        fetchFood(selectedCategory, keyword);
+        console.log('keyword', keyword);
+    }
+
     const handleThanhtoan = (event: React.MouseEvent) => {
         event.stopPropagation();
         event.preventDefault();
@@ -91,8 +137,9 @@ function HomeMobile() {
     }
 
     const handleClickCategory = (id: number) => {
-        console.log('click category', id);
-        fetchFood(id)
+        setSelectedCategory(id);
+        // console.log('click category', id);
+        // fetchFood(id, keyword);
     }
 
     if (isLoading) {
@@ -107,7 +154,12 @@ function HomeMobile() {
             <div className='container-home'>
                 <div>
                     <div>
-                        <input type="text" placeholder='search'/>
+                        {/* tạo một Form */}
+                        <form onSubmit={handleSubmit} className='w-100 d-flex align-items-center gap-2'>
+                            <input className='flex-grow-1 border-0 rounded' type="text" placeholder='search' value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+                            <button type="submit"><Search /></button>
+                        </form>
+                        {/* <input className='home-search' type="text" placeholder='search' /> */}
                     </div>
                     <div className='home-info'>
                         <HomeIcon></HomeIcon>
@@ -120,9 +172,9 @@ function HomeMobile() {
                 <div className='doanhmuc-list'>
                     {category.map((item, i) => (
                         <button key={i} onClick={() => { handleClickCategory(item.id) }}>
-                            <div className='doanhmuc-item'>
+                            <div className={`doanhmuc-item${selectedCategory === item.id ? ' active-item' : ''}`}>
                                 <img src={`${url}${item.image}`} alt="" />
-                                <div className='doanhmuc-item-name'>{item.name}</div>
+                                <div className={`doanhmuc-item-name${selectedCategory === item.id ? ' active-name' : ''}`}>{item.name}</div>
                             </div>
                         </button>
                     ))}
@@ -131,23 +183,30 @@ function HomeMobile() {
                     {food && (
                         <div className='home-content-list'>
                             {food.map((item, i) => (
-                                <button key={i} onClick={(e) => handleClickItem(`${i + 1}`, e)}>
-                                    <div className='home-content-item'>
-                                        <div>
-                                            <img src={`${url}${item.image}`} alt="" />
-                                        </div>
-                                        <div className='home-content-item-name text-wrap'>
-                                            {item.name}
-                                        </div>
-                                        <div className='price-icon' >
-                                            <div className='home-content-item-price'>{item.sell_price.toLocaleString()}</div>
-                                            <button onClick={(e) => { handleClickBuy(item, e) }} className='home-content-item-icon'>
-                                                <LucideShoppingCart></LucideShoppingCart>
-                                            </button>
-                                        </div>
+                                <div className='home-content-item' key={i} onClick={(e) => handleClickItem(`${i + 1}`, e)}>
+                                    <div>
+                                        <img src={`${url}${item.image}`} alt="" />
                                     </div>
-                                </button>
+                                    <div className='home-content-item-name'>
+                                        {item.name}
+                                    </div>
+                                    <div className='price-icon' >
+                                        <div className='home-content-item-price'>{item.sell_price.toLocaleString()}</div>
+                                        <button onClick={(e) => { handleClickBuy(item, e) }} className='home-content-item-icon'>
+                                            <LucideShoppingCart></LucideShoppingCart>
+                                        </button>
+                                    </div>
+                                </div>
                             ))}
+                        </div>
+                    )}
+                    {isLoadingProduct && (
+                        <div className='w-100 d-flex justify-content-center align-items-center p-3'>
+                            <SyncLoader
+                                className='p-1'
+                                color="chocolate"
+                                size={10}
+                            />
                         </div>
                     )}
                 </div>

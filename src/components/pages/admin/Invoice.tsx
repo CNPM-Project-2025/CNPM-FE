@@ -5,6 +5,8 @@ import { useUser } from "../../../context/UserContext";
 import { BillType } from "../../../types/BillType";
 import LoadingScreen from "../../common/LoadingScreen";
 import { Search } from "lucide-react";
+import config from '../../../config/config.ts';
+
 
 
 
@@ -17,7 +19,7 @@ type Params = {
   min_price?: number | null;
   max_price?: number | null;
 };
-const url = 'http://192.168.16.92:9999/';
+const url = config.API_URL;
 
 function Invoice() {
 

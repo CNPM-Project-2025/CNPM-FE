@@ -5,6 +5,7 @@ import { useUser } from "../../../context/UserContext";
 import { foodType, categoryType } from "../../../types/ProductTpye";
 import LoadingScreen from "../../common/LoadingScreen";
 import { Search } from "lucide-react";
+import config from '../../../config/config.ts';
 
 type createFoodType = {
   name: string;
@@ -25,6 +26,8 @@ type Params = {
   min_price?: number | null;
   max_price?: number | null;
 };
+
+const url = config.API_URL;
 
 function Product() {
 
@@ -76,7 +79,7 @@ function Product() {
   // fetch
 
   const fetchCategory = async () => {
-    const response = await fetch('http://localhost:9999/category', {
+    const response = await fetch(`${url}category`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -104,7 +107,7 @@ function Product() {
     });
 
     const queryParams = new URLSearchParams(filteredParams);
-    const response = await fetch(`http://localhost:9999/food?${queryParams}`, {
+    const response = await fetch(`${url}food?${queryParams}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -125,7 +128,7 @@ function Product() {
 
   const fetchaddFood = async (createFood: createFoodType) => {
     // Gửi post loginForm lên server
-    const response = await fetch('http://localhost:9999/food', {
+    const response = await fetch(`${url}food`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -148,7 +151,7 @@ function Product() {
     const formData = new FormData();
     formData.append('imageFood', file);
 
-    const response = await fetch(`http://localhost:9999/food/${id}/upload-image-food`, {
+    const response = await fetch(`${url}food/${id}/upload-image-food`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${user?.access_token}`,
@@ -374,7 +377,7 @@ function Product() {
         <tbody>
           {allFood.map((food, index) => (
             <tr key={food.id}>
-              <td><img className="img-thumbnail" style={{ width: "50px", height: "50px" }} src={"http://localhost:9999/" + food.image} alt={food.name} /></td>
+              <td><img className="img-thumbnail" style={{ width: "50px", height: "50px" }} src={`${url}${food.image}`} alt={food.name} /></td>
               <td>{food.id}</td>
               <td>{food.name}</td>
               <td>{food.sell_price.toLocaleString()}₫</td>

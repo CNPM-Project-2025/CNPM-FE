@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Modal, Form, Table } from "react-bootstrap";
 import { useUser } from "../../../context/UserContext";
 import { UserType } from "../../../types/UserType";
+import config from '../../../config/config.ts';
 
 import LoadingScreen from "../../common/LoadingScreen";
 import { Search } from "lucide-react";
@@ -17,7 +18,7 @@ type Params = {
 
 function Employee() {
 
-  const url = 'http://192.168.16.92:9999/';
+  const url = config.API_URL;
 
   const navigate = useNavigate();
   const location = useLocation();

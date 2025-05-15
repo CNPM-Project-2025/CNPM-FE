@@ -61,7 +61,7 @@ const LeftMenu = () => {
         <MenuBtn paths={["/admin/employee"]} icon={<User size={18} />} label="Quản lý nhân viên" />
         <MenuBtn paths={["/admin/invoice"]} icon={<ScrollText size={18} />} label="Quản lý hóa đơn" />
         <MenuBtn paths={["/admin/product", "/admin/category"]} icon={<PackageSearch size={18} />} label="Quản lý sản phẩm" />
-        <MenuBtn paths={["/admin/import"]} icon={<Import size={18} />} label="Quản lý nhập hàng" />
+        <MenuBtn paths={["/admin/import", "/admin/import/create"]} icon={<Import size={18} />} label="Quản lý nhập hàng" />
         <MenuBtn paths={["/admin/statistics"]} icon={<ChartNoAxesCombined size={18} />} label="Thống kê" />
       </div>
 

@@ -19,8 +19,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomeMobile />} />
           <Route path="/home" element={<Home />} /> {/* Route cho trang chính */}
-          <Route path="/thanh-toan" element={<Payment />} /> {/* Route cho trang chính */}
-          <Route path="/thanhtoan" element={<ThanhToan />} />
+          <Route path="/thanh-toan" element={<ThanhToan />} />
+          <Route path="/thanh-toan/the" element={<Payment />} /> {/* Route cho trang chính */}
           <Route path="*" element={<NotFound />} /> {/* Route mặc định cho 404 */}
           <Route path="/admin/*" element={<AdminRoutes />} />
         </Routes>

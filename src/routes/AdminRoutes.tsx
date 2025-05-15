@@ -9,6 +9,7 @@ import Product from '../components/pages/admin/Product';
 import Import from '../components/pages/admin/Import';
 import Statistics from '../components/pages/admin/Statistics';
 import Account from '../components/pages/admin/Account';
+import { ImportCreate } from '../components/pages/admin/ImportCreate';
 import Category from '../components/pages/admin/Category';
 
 import { UserProvider } from "../context/UserContext";
@@ -25,10 +26,12 @@ const AdminRoutes = () => {
           <Route path="employee" element={<Employee />} />
           <Route path="product" element={<Product />} />
           <Route path="import" element={<Import />} />
+          {/* </Route> */}
           <Route path="statistics" element={<Statistics />} />
           <Route path="invoice" element={<Invoice />} />
           <Route path="account" element={<Account />} />
           <Route path='category' element={<Category />} />
+          <Route path="import/create" element={<ImportCreate />} />
         </Route>
         <Route path="login" element={<Login />} />
       </Routes>

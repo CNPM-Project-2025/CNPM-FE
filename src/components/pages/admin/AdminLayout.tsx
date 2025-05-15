@@ -11,7 +11,7 @@ const AdminLayout = () => {
     return <LoadingScreen />;
   }
 
-  if (!user) {
+  if (!user && !isLoading) {
     return <Navigate to="/admin/login" replace />;
   }
 
