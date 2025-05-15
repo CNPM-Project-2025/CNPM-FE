@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Modal, Form, Table } from "react-bootstrap";
 import { useUser } from "../../../context/UserContext";
 import { foodType, categoryType } from "../../../types/ProductTpye";
-
+import config from '../../../config/config.ts';
 import LoadingScreen from "../../common/LoadingScreen";
 
 type createCategoryType = {
@@ -11,7 +11,7 @@ type createCategoryType = {
     description: string;
 }
 
-
+const url = config.API_URL;
 
 function Category() {
     // auth
@@ -82,7 +82,7 @@ function Category() {
         formData.append('description', cat.description);
         formData.append('status', cat.status.toString());
 
-        const response = await fetch(`http://localhost:9999/category/${id}`, {
+        const response = await fetch(`${url}category/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ function Category() {
 
     const fetchCreateCategory = async () => {
 
-        const response = await fetch('http://localhost:9999/category', {
+        const response = await fetch(`${url}category`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ function Category() {
         const formData = new FormData();
         formData.append('image-category', file);
 
-        const response = await fetch(`http://localhost:9999/category/${id}/upload-image-category`, {
+        const response = await fetch(`${url}category/${id}/upload-image-category`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${user?.access_token}`,
@@ -145,7 +145,7 @@ function Category() {
 
     const fetchCategory = async () => {
         setIsLoading(true);
-        const response = await fetch('http://localhost:9999/category', {
+        const response = await fetch(`${url}category`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -206,7 +206,7 @@ function Category() {
                     {category.map((cat) => (
                         <tr key={cat.id}>
                             <td>
-                                {cat.image && <img src={`http://localhost:9999/${cat.image}`} alt={cat.name} style={{ width: '60px', height: '60px' }} />}
+                                {cat.image && <img src={`${url}${cat.image}`} alt={cat.name} style={{ width: '60px', height: '60px' }} />}
                             </td>
                             <td>{cat.id}</td>
                             <td>{cat.name}</td>
@@ -319,7 +319,7 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ item, isShow, handleEdit, h
 
                         <div className="d-flex gap-3">
                             <div>
-                                <img style={{ width: "70px", height: "70px" }} src={imgfile ? URL.createObjectURL(imgfile) : `http://localhost:9999/${cloneItem?.image}`} alt="" />
+                                <img style={{ width: "70px", height: "70px" }} src={imgfile ? URL.createObjectURL(imgfile) : `${url}${cloneItem?.image}`} alt="" />
                             </div>
                             <div>
                                 <Form.Group className="mb-3">

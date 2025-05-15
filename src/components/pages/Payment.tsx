@@ -2,6 +2,7 @@ import { useState, ChangeEvent, MouseEvent } from 'react';
 import { useNotification } from '../../hooks/useNotification';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../assets/styles/Payment.css';
+import { CardInfoType } from '../../types/cardInfoType'
 import { useNavigate } from 'react-router-dom'; // Thêm useNavigate vào import
 
 
@@ -107,6 +108,19 @@ const Payment: React.FC = () => {
       setCvc('');
       setCardHolder('');
       setErrors({});
+
+      const cardInfo: CardInfoType = {
+        cardNumber: cardNumber,
+        cardHolderName: cardHolder,
+        expirationDate: expiry,
+        cvv: cvc,
+      }
+
+      navigate('/thanh-toan', {
+        state: {
+          cardInfo
+        },
+      });
       
       // chuyen trang
       // navigate('/');
@@ -236,7 +250,7 @@ const Payment: React.FC = () => {
                   Đang xử lý...
                 </>
               ) : (
-                'Thanh toán'
+                'Tiếp tục'
               )}
             </button>
 
@@ -251,7 +265,7 @@ const Payment: React.FC = () => {
                 showNotification('Đã hủy thanh toán', 'info');
               }}
             >
-              Hủy thanh toán
+              Hủy 
             </button>
 
             <div className="d-flex justify-content-between align-items-center">

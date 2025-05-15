@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../../context/UserContext';
+import backgroundURL from '../../../assets/images/animated-svg-background-example.svg'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import config from '../../../config/config.ts';
+import { height, width } from '@fortawesome/free-solid-svg-icons/faCartShopping';
+
 
 type LoginForm = {
   email: string;
   password: string;
 }
+
+const url = config.API_URL;
 
 const Login = () => {
   const { setUser } = useUser();
@@ -22,7 +28,7 @@ const Login = () => {
 
   const fetchauth = async () => {
     // Gửi post loginForm lên server
-    const response = await fetch('http://localhost:9999/auth/login', {
+    const response = await fetch(`${url}auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,6 +38,7 @@ const Login = () => {
     const data = await response.json();
     if (response.ok) {
       // Lưu thông tin người dùng vào context
+      localStorage.setItem('refresh_token', data.refresh_token);
       setUser({
         avatar: data.user.avatar,
         role: data.user.role,
@@ -40,7 +47,7 @@ const Login = () => {
         last_name: data.user.last_name,
         created_at: data.user.created_at,
         email: data.user.email,
-        auth: data.user.auth,
+        // auth: data.user.auth,
         access_token: data.access_token,
         refresh_token: data.refresh_token,
       });
@@ -101,11 +108,13 @@ const Login = () => {
 const styles = {
   container: {
     display: 'flex',
+    width: '100%',
+    height: '100vh',
     flexDirection: 'column' as const,
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100vh',
-    backgroundColor: '#f7f7f7',
+    // backgroundColor: '#f7f7f7',
+    backgroundImage: `url(${backgroundURL})`,
   },
   form: {
     display: 'flex',

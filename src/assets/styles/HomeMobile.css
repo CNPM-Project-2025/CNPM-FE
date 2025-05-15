@@ -1,8 +1,29 @@
+/* body {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(242, 243, 245);
+} */
+
+
 .home {
     display: flex;
     flex-direction: column;
     gap: 10px;
     padding: 10px;
+    background-color: rgb(250, 250, 250);
+    margin-bottom: 60px;
+}
+
+.home-search {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px;
 }
 
 .home-info {
@@ -35,6 +56,15 @@
     height: 100px;
 }
 
+.active-item {
+    background-color: white;
+    border: 1px solid chocolate;
+}
+
+.active-name {
+    color: chocolate;
+}
+
 .doanhmuc-item img {
     width: 60px;
     height: 60px;
@@ -45,37 +75,44 @@
     display: flex;
     flex-wrap: wrap;
     overflow-y: auto;
+    background-color: transparent;
     gap: 10px;
 }
 
 .home-content-item {
+    width: calc(50% - 10px);
     display: flex;
     flex-direction: column;
     gap: 5px;
     padding: 10px;
     border-radius: 10px;
-    border: 1px solid black;
-    margin: 5px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px;
+    box-sizing: border-box;
 }
 
 
 .home-content-item img {
-    width: 150px;
-    height: 150px;
+    width: 100%;
+    /* flex: 1; */
+    /* width: 150px; */
+    /* height: 150px; */
     /* min-width: 100px;
     min-height: 100px; */
 }
 
 .home-content-item-name {
-    width: 150px;
+    width: 100%;
     height: 54px;
     text-align: start;
+    /* color: chocolate; */
 }
 
 .price-icon {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    color: chocolate;
 }
 
 /* style.css */
@@ -155,6 +192,19 @@
 
 
 @media screen and (min-width: 768px) {
+    .cart{
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        right: 0;
+        top: 0;
+    }
+
+    .modal-cart{
+        flex: 1;
+    }
+    
     .cart-bar {
         position: relative;
         display: flex;
@@ -174,6 +224,7 @@
     .home {
         display: flex;
         flex-direction: row;
+        margin-right: 500px;
     }
 
     .modal-overlay {
@@ -188,4 +239,18 @@
         /* để modal trồi từ dưới lên */
     }
 
+}
+
+@media screen and (min-width: 1250px) {
+    .home-content-item {
+        width: calc(25% - 10px);
+    }
+
+    .home-content-list {
+        display: flex;
+        flex-wrap: wrap;
+        overflow-y: auto;
+        background-color: transparent;
+        gap: 10px;
+    }
 }
