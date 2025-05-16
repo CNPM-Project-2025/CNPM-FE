@@ -10,6 +10,8 @@ import { Button, Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { CardInfoType } from '../../types/cardInfoType.ts'
 import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { TableType } from './admin/Table.tsx';
 
 
 
@@ -30,11 +32,13 @@ type createBill = {
 function ThanhToan() {
 
     const url = config.API_URL;
-
-    const { cart, addToCart, increaseQuantity, decreaseQuantity, getTotalPrice, isLoading } = useCart();
+    const location = useLocation();
+    // nhập table từ urlroute
+    const Table: TableType | undefined = location.state?.Table;
+    console.log('Table', Table);
+    const { cart, addToCart, increaseQuantity, decreaseQuantity, getTotalPrice, isLoading, clearCart } = useCart();
     const [isLoadinglocal, setIsLoading] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>(PaymentMethod.CASH); // Phương thức thanh toán mặc định là tiền mặt
-    const location = useLocation();
     const navigate = useNavigate();
 
     const [expanded, setExpanded] = useState(true);
@@ -53,28 +57,28 @@ function ThanhToan() {
             totalPrice: getTotalPrice(),
             paymentMethod: selectedPayment,
             type: 'DINE_IN',
-            tableId: 1,
+            tableId: Table?.id,
             cardinfo: data,
             orderDetails: orderDetails,
         };
 
         console.log('bill', bill);
         // Gửi bill đến API
-        fetch(`${url}bill`, {
+        const response = await fetch(`${url}bill`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(bill),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log('Success:', data);
-                // Xử lý phản hồi từ API nếu cần
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+        if (!response.ok) {
+            toast.error('Thanh toán thất bại');
+            setIsLoading(false);
+            return;
+        }
+        toast.success('Thanh toán thành công');
+        clearCart();
+        navigate(`/${Table?.id}`);
         setIsLoading(false);
     }
 
@@ -90,15 +94,19 @@ function ThanhToan() {
         setSelectedPayment(paymentMethod);
     };
 
-    const handlethahtoan = () => {
+    const handlethahtoan =  () => {
         if (selectedPayment === PaymentMethod.CARD) {
             if (data) {
-                fetchthanhtoan();
+                fetchthanhtoan();   
+                // toast.success('Thanh toán thành công');
             } else {
                 navigate('/thanh-toan/the', {
                     state: { cardInfo: data }
                 });
             }
+        } else {
+            fetchthanhtoan();
+            // toast.success('Thanh toán thành công');
         }
     }
 

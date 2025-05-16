@@ -1,5 +1,6 @@
 import { PaymentMethod } from "./PaymentMethod";
 import { foodType } from "../types/ProductTpye";
+import { TableType } from "../components/pages/admin/Table";
 // tạo enum loại 
 // hóa đơn
 export enum BillTypeEnum {
@@ -36,6 +37,7 @@ export type BillType = {
     totalPrice: number;
     created_at: string;
     updated_at: string;
+    table: TableType;
     status: billStatusEnum;
     orderDetails: orderDetails[];
 }

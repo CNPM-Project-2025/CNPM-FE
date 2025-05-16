@@ -9,7 +9,7 @@ function Info() {
         <div>
             <h1>Info</h1>
             <p>This is the info page.</p>
-            <p>{user?.name}</p>
+            <p>{user?.first_name}</p>
         </div>
     );
 }

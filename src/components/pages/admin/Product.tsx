@@ -6,6 +6,7 @@ import { foodType, categoryType } from "../../../types/ProductTpye";
 import LoadingScreen from "../../common/LoadingScreen";
 import { Search } from "lucide-react";
 import config from '../../../config/config.ts';
+import { toast } from "react-toastify";
 
 type createFoodType = {
   name: string;
@@ -14,7 +15,7 @@ type createFoodType = {
   import_price: number;
   status: number;
   stock: number;
-  category_id: number;
+  categoryId: number;
 }
 
 type Params = {
@@ -42,7 +43,7 @@ function Product() {
   };
 
   // auth
-  const isFirstRender = useRef(true); 
+  const isFirstRender = useRef(true);
   const { user, isLoading } = useUser();
   const [isProductLoading, setIsLoading] = useState(false);
   // value
@@ -72,9 +73,11 @@ function Product() {
     import_price: 0,
     status: 1,
     stock: 0,
-    category_id: 0,
+    categoryId: 0,
   });
 
+  const [isShowUpdate, setIsShowUpdate] = useState(false);
+  const [UpdateProduct, setUpdateProduct] = useState<foodType | null>(null);
 
   // fetch
 
@@ -168,6 +171,24 @@ function Product() {
     }
   }
 
+  const fetchUpdateProduct = async (food: foodType) => {
+    // Gửi post loginForm lên server
+    const response = await fetch(`${url}food/${food.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user?.access_token}`,
+      },
+      body: JSON.stringify(food),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      console.log('Cập nhật sản phẩm thành công:', data);
+      return data;
+    } else {
+      alert('Cập nhật sản phẩm không thành công!');
+    }
+  };
 
 
 
@@ -176,7 +197,10 @@ function Product() {
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
 
-  const handleEdit = (food: foodType) => { };
+  const handleEdit = (food: foodType) => {
+    setUpdateProduct(food);
+    setIsShowUpdate(true);
+  };
   const handleDelete = async (id: number) => { };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -187,6 +211,50 @@ function Product() {
         ? Number(value)
         : value
     }));
+  };
+
+  const handleChangeUpdate = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setUpdateProduct(prev => {
+      if (!prev) return prev;
+      let newValue: any = value;
+      if (name === 'sell_price' || name === 'import_price' || name === 'stock' || name === 'status') {
+        newValue = Number(value);
+      }
+      if (name === 'categoryId') {
+        // update category object if categoryId changes
+        const selectedCategory = categorys.find(cat => cat.id === Number(value));
+        return {
+          ...prev,
+          category: selectedCategory ? selectedCategory : prev.category,
+          categoryId: Number(value),
+        };
+      }
+      return {
+        ...prev,
+        [name]: newValue,
+      };
+    });
+  };
+
+  const handleUpdate = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    if (!UpdateProduct) {
+      toast.error("Sản phẩm không hợp lệ");
+      return;
+    }
+    if (imageFile) {
+      await fetchaddimg(UpdateProduct.id, imageFile);
+    }
+
+    const data = await fetchUpdateProduct(UpdateProduct);
+    if (data) {
+      toast.success("Cập nhật sản phẩm thành công");
+      await fetchallFood(params);
+    }
+    setIsLoading(false);
+    setIsShowUpdate(false);
   };
 
   const handleAdd = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -208,7 +276,7 @@ function Product() {
       import_price: 0,
       status: 1,
       stock: 0,
-      category_id: 0,
+      categoryId: 0,
     });
   };
 
@@ -294,10 +362,10 @@ function Product() {
             onChange={(e) => setParams({ ...params, search_by: e.target.value })}
             style={{ width: '150px' }}
           >
-           
+
             <option value="name">Tên</option>
             <option value="description">Mô tả</option>
-            <option value="code">Mã sản phẩm</option> 
+            <option value="code">Mã sản phẩm</option>
           </Form.Select>
 
           {/* category */}
@@ -308,7 +376,7 @@ function Product() {
             style={{ width: '200px' }}
           >
             <option selected value="">Tất cả danh mục</option>
-             {categorys.map(item => (
+            {categorys.map(item => (
               <option key={item.id} value={item.id}>
                 {item.name}
               </option>
@@ -324,7 +392,7 @@ function Product() {
 
           {/* giá min */}
           <Form.Control
-            style={{width:"300px"}}
+            style={{ width: "300px" }}
             type="number"
             placeholder="Giá min"
             defaultValue={params.min_price || ''}
@@ -332,7 +400,7 @@ function Product() {
           />
           {/* giá max */}
           <Form.Control
-            style={{width:"300px"}}
+            style={{ width: "300px" }}
             type="number"
             placeholder="Giá max"
             defaultValue={params.max_price || ''}
@@ -498,6 +566,22 @@ function Product() {
             </Form.Group>
 
             <Form.Group className="mb-3">
+              <Form.Label>Danh mục</Form.Label>
+              <Form.Select
+                name="categoryId"
+                value={createFood.categoryId}
+                onChange={handleChange}
+              >
+                <option value="">Chọn danh mục</option>
+                {categorys.map(item => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
               <Form.Label>Trạng thái</Form.Label>
               <Form.Select
                 name="status"
@@ -509,36 +593,131 @@ function Product() {
               </Form.Select>
             </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Số lượng trong kho</Form.Label>
-              <Form.Control
-                type="number"
-                name="stock"
-                value={createFood.stock}
-                onChange={handleChange}
-              />
-            </Form.Group>
+            {/* select */}
 
-            <Form.Group className="mb-3">
-              <Form.Label>Danh mục (ID)</Form.Label>
-              <Form.Control
-                type="number"
-                name="category_id"
-                value={createFood.category_id}
-                onChange={handleChange}
-              />
-            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Hủy
           </Button>
-          <Button variant="primary" onClick={handleAdd}>
-            Thêm
+          <Button variant="primary" onClick={handleUpdate}>
+            Cập nhật
           </Button>
         </Modal.Footer>
       </Modal>
+      {/* Modal sửa sản phẩm */}
+      <Modal show={isShowUpdate} onHide={() => setIsShowUpdate(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Cập nhật sản phẩm</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Tên sản phẩm</Form.Label>
+              <Form.Control
+                type="text"
+                name="name"
+                value={UpdateProduct?.name}
+                onChange={handleChangeUpdate}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Mô tả</Form.Label>
+              <Form.Control
+                as="textarea"
+                name="description"
+                value={UpdateProduct?.description}
+                onChange={handleChangeUpdate}
+              />
+            </Form.Group>
+
+            {/* img */}
+            <Form.Group className="mb-3 d-flex gap-2">
+              {UpdateProduct?.image && (
+                <img
+                  className="img-thumbnail mt-2"
+                  style={{ width: "auto", height: "80px" }}
+                  src={`${url}${UpdateProduct.image}`}
+                  alt={UpdateProduct.name}
+                />
+              )}
+              <div>
+                <Form.Label>Hình ảnh</Form.Label>
+                <Form.Control
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0];
+                    if (file) {
+                      setImageFile(file);
+                      console.log("File hình đã chọn:", file);
+                    }
+                  }}
+                />
+              </div>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Giá bán</Form.Label>
+              <Form.Control
+                type="text"
+                name="sell_price"
+                value={UpdateProduct?.sell_price}
+                onChange={handleChangeUpdate}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Giá nhập</Form.Label>
+              <Form.Control
+                type="text"
+                name="import_price"
+                value={UpdateProduct?.import_price}
+                onChange={handleChangeUpdate}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Danh mục</Form.Label>
+              <Form.Select
+                name="categoryId"
+                value={UpdateProduct?.category.id}
+                onChange={handleChangeUpdate}
+              >
+                {categorys.map(item => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Trạng thái</Form.Label>
+              <Form.Select
+                name="status"
+                value={UpdateProduct?.status}
+                onChange={handleChangeUpdate}
+              >
+                <option value={1}>Đang bán</option>
+                <option value={0}>Ngừng bán</option>
+              </Form.Select>
+            </Form.Group>
+
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setIsShowUpdate(false)}>
+            Hủy
+          </Button>
+          <Button variant="primary" onClick={handleUpdate}>
+            Cập nhật
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
     </div>
   );
 }

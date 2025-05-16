@@ -7,6 +7,7 @@ import config from '../../../config/config.ts';
 
 import LoadingScreen from "../../common/LoadingScreen";
 import { Search } from "lucide-react";
+import { toast } from "react-toastify";
 
 type Params = {
   page?: number | 1;
@@ -14,6 +15,24 @@ type Params = {
   search?: string | null;
   search_by?: string | null;
 };
+
+type creatUser = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  password: string;
+  status: number;
+}
+
+type UpdateUser = {
+  first_name: string;
+  last_name: string;
+  // email: string;
+  phone: string;
+  password: string;
+  status: number;
+}
 
 
 function Employee() {
@@ -48,8 +67,28 @@ function Employee() {
     search_by: null,
   });
   const [showModal, setShowModal] = useState(false);
+  const [isShowUpdate, setIsShowUpdate] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
-
+  const [newUser, setNewUser] = useState<creatUser>(
+    {
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone: '',
+      password: '',
+      status: 1,
+    }
+  );
+  const [updateUser, setUpdateUser] = useState<UpdateUser>({
+    first_name: '',
+    last_name: '',
+    // email: '',
+    phone: '',
+    password: '',
+    status: 1,
+  });
+  const [configPassword, setConfigPassword] = useState<string>('');
+  const [SelectUser, setSelectUser] = useState<UserType | null>(null);
   // fetch
 
   const fetchUser = async (params: Params) => {
@@ -84,7 +123,67 @@ function Employee() {
 
 
   // handle
+  const handleAddUser = async () => {
+    if (newUser.password !== configPassword) {
+      toast.error("Mật khẩu không khớp");
+      return;
+    }
+    
+    if (newUser.first_name === '' || newUser.last_name === '' || newUser.email === '' || newUser.phone === '' || newUser.password === '') {
+      toast.error("Vui lòng điền đầy đủ thông tin");
+      return;
+    }
 
+    const response = await fetch(`${url}users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user?.access_token}`,
+      },
+      body: JSON.stringify(newUser),
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      toast.error(`Failed to create user: ${data.message}`);
+      return;
+    }
+    const data = await response.json();
+    toast.success(`Thêm nhân viên thành công: ${data.message}`);
+    setShowModal(false);
+  }
+
+
+  const handleUpdateUser = async (id:number) => {
+
+    if (updateUser.password || configPassword) {
+      if (updateUser.password !== configPassword) {
+        toast.error("Mật khẩu không khớp");
+        return;
+      }
+    }
+
+    if (updateUser.first_name === '' || updateUser.last_name === '' || updateUser.phone === '') {
+      toast.error("Vui lòng điền đầy đủ thông tin");
+      return;
+    }
+
+    const response = await fetch(`${url}users/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user?.access_token}`,
+      },
+      body: JSON.stringify(updateUser),
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      toast.error(`Failed to update user: ${data.message}`);
+      return;
+    }
+    const data = await response.json();
+    toast.success(`Cập nhật nhân viên thành công`);
+    setIsShowUpdate(false);
+  }
 
   // useEffect
   useEffect(() => {
@@ -172,7 +271,7 @@ function Employee() {
         </Form>
       </div>
       <div className="d-flex gap-3 align-items-center mb-3">
-        <Button onClick={console.log}>
+        <Button onClick={ (e) => {setShowModal(true)}}  variant="primary">
           Thêm nhân viên
         </Button>
 
@@ -205,12 +304,24 @@ function Employee() {
               <td>{user.status === 1 ? "Đang làm" : "Ngừng làm"}</td>
               <td style={{ whiteSpace: 'nowrap' }}>
                 <div className="d-flex gap-2">
-                  <Button variant="warning" size="sm" onClick={() => { }}>
+                  <Button variant="warning" size="sm" 
+                  onClick={() => {
+                    setUpdateUser({
+                      first_name: user.first_name,
+                      last_name: user.last_name,
+                      // email: user.email,
+                      phone: user.phone,
+                      password: '',
+                      status: user.status,
+                    });
+                    setSelectUser(user);
+                    setIsShowUpdate(true);
+                  }}>
                     Sửa
                   </Button>
-                  <Button variant="danger" size="sm" onClick={() => { }}>
+                  {/* <Button variant="danger" size="sm" onClick={() => { }}>
                     Xóa
-                  </Button>
+                  </Button> */}
                 </div>
               </td>
             </tr>
@@ -248,7 +359,111 @@ function Employee() {
           Next
         </Button>
       </div>
+    {/* thêm nhân viên */}
+    <Modal show={showModal} onHide={() => setShowModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Thêm nhân viên</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Họ</Form.Label>
+          <Form.Control type="text" placeholder="Nhập họ" value={newUser.first_name} onChange={(e) => setNewUser({ ...newUser, first_name: e.target.value })} />
+        </Form.Group>
+        
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Tên</Form.Label>
+          <Form.Control type="text" placeholder="Nhập tên" value={newUser.last_name} onChange={(e) => setNewUser({ ...newUser, last_name: e.target.value })} />
+        </Form.Group>
 
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Email</Form.Label>
+          <Form.Control type="email" placeholder="Nhập email" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Số điện thoại</Form.Label>
+          <Form.Control type="text" placeholder="Nhập số điện thoại" value={newUser.phone} onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Mật khẩu</Form.Label>
+          <Form.Control type="password" placeholder="Nhập mật khẩu" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Nhập lại mật khẩu</Form.Label>
+          <Form.Control type="password" placeholder="Nhập lại mật khẩu" value={configPassword} onChange={(e) => setConfigPassword(e.target.value)} />
+        </Form.Group>
+
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowModal(false)}>
+          Đóng
+        </Button>
+        <Button variant="primary" onClick={handleAddUser}>
+          Thêm
+        </Button>
+      </Modal.Footer>
+    </Modal>
+    {/* Sửa nhân viên */}
+    <Modal show={isShowUpdate} onHide={() => setIsShowUpdate(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Sửa nhân viên</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Họ</Form.Label>
+          <Form.Control type="text" placeholder="Nhập họ" value={updateUser.first_name} onChange={(e) => setUpdateUser({ ...updateUser, first_name: e.target.value })} />
+        </Form.Group>
+        
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Tên</Form.Label>
+          <Form.Control type="text" placeholder="Nhập tên" value={updateUser.last_name} onChange={(e) => setUpdateUser({ ...updateUser, last_name: e.target.value })} />
+        </Form.Group>
+{/* 
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Email</Form.Label>
+          <Form.Control type="email" placeholder="Nhập email" value={updateUser.email} onChange={(e) => setUpdateUser({ ...updateUser, email: e.target.value })} />
+        </Form.Group> */}
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Số điện thoại</Form.Label>
+          <Form.Control type="text" placeholder="Nhập số điện thoại" value={updateUser.phone} onChange={(e) => setUpdateUser({ ...updateUser, phone: e.target.value })} />
+        </Form.Group>
+
+        {/* status */}
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Trạng thái</Form.Label>
+          <Form.Select
+            defaultValue={updateUser.status}
+            onChange={(e) => setUpdateUser({ ...updateUser, status: Number(e.target.value) })}
+          >
+            <option value={1}>Đang làm</option>
+            <option value={0}>Ngừng làm</option>
+          </Form.Select>
+        </Form.Group>
+
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Mật khẩu</Form.Label>
+          <Form.Control type="password" placeholder="Nhập mật khẩu" value={updateUser.password} onChange={(e) => setUpdateUser({ ...updateUser, password: e.target.value })} />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Nhập lại mật khẩu</Form.Label>
+          <Form.Control type="password" placeholder="Nhập lại mật khẩu" value={configPassword} onChange={(e) => setConfigPassword(e.target.value)} />
+        </Form.Group>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowModal(false)}>
+          Đóng
+        </Button>
+        <Button variant="primary" onClick={() => handleUpdateUser(SelectUser?.id || 0)}>
+          Cập nhật
+        </Button>
+      </Modal.Footer>
+    </Modal>
     </div>
   )
 }

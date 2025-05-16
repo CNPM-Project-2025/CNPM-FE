@@ -59,7 +59,7 @@ const LeftMenu = () => {
         <MenuBtn paths={["/admin/home"]} icon={<Home size={18} />} label="Trang chủ" />
         <MenuBtn paths={["/admin/info"]} icon={<Info size={18} />} label="Thông tin của tôi" />
         <MenuBtn paths={["/admin/employee"]} icon={<User size={18} />} label="Quản lý nhân viên" />
-        <MenuBtn paths={["/admin/invoice"]} icon={<ScrollText size={18} />} label="Quản lý hóa đơn" />
+        <MenuBtn paths={["/admin/invoice", "/admin/invoice/table"]} icon={<ScrollText size={18} />} label="Quản lý hóa đơn" />
         <MenuBtn paths={["/admin/product", "/admin/category"]} icon={<PackageSearch size={18} />} label="Quản lý sản phẩm" />
         <MenuBtn paths={["/admin/import", "/admin/import/create"]} icon={<Import size={18} />} label="Quản lý nhập hàng" />
         <MenuBtn paths={["/admin/statistics"]} icon={<ChartNoAxesCombined size={18} />} label="Thống kê" />

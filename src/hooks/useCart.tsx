@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { foodType, categoryType } from "../types/ProductTpye";
+import { TentIcon } from "lucide-react";
+import { toast } from "react-toastify";
+import { flushSync } from "react-dom";
 let tax: number = 10 / 100;
 
 interface CartItem extends foodType {
@@ -9,16 +12,32 @@ interface CartItem extends foodType {
 export function useCart() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+
   const addToCart = (product: foodType) => {
+
+    if (product.stock <= 0) {
+      toast.error("sản phẩm đã hết hàng");
+      return;
+    }
+    
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === product.id);
       if (existingItem) {
-        return prevCart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
+        return prevCart.map((item) => {
+          if (item.id === product.id) {
+            if (item.stock > item.quantity) {
+              toast.success("Thêm sản phẩm thành công");
+              return { ...item, quantity: item.quantity + 1 };
+            } else {
+              toast.error("Sản phẩm đã hết hàng");
+              return item;
+            }
+          }
+          return item;
+        });
       }
+      toast.success("Thêm sản phẩm thành công");
       return [...prevCart, { ...product, quantity: 1 }];
     });
   };
@@ -39,10 +58,19 @@ export function useCart() {
 
   // ➕ Tăng số lượng sản phẩm
   const increaseQuantity = (id: number) => {
+
     setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
+      prevCart.map((item) => {
+        if (item.id === id) {
+          if (item.stock > item.quantity) {
+            return { ...item, quantity: item.quantity + 1 };
+          } else {
+            toast.error("Sản phẩm đã hết hàng");
+            return item;
+          }
+        }
+        return item;
+      })
     );
   };
 
@@ -86,6 +114,12 @@ export function useCart() {
     }
   }
 
+  // xóa tất cả 
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("cart");
+  };
+
   useEffect(() => {
     // bỏ qua lần đầu tiên
     if (isLoading) {
@@ -110,5 +144,6 @@ export function useCart() {
     removeFromCart,
     addToCartbySL,
     isLoading,
+    clearCart,
   };
 }

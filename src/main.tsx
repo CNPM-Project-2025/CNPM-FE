@@ -6,7 +6,7 @@ import App from "./App";
 import { NotificationProvider } from './hooks/useNotification'; // Đảm bảo import đúng file NotificationProvider của bạn
 import { BrowserRouter } from "react-router-dom";
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  <React.Fragment>
     <BrowserRouter>
     <NotificationProvider>
       <Provider store={store}>
@@ -14,5 +14,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       </Provider>
     </NotificationProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.Fragment  >
 );

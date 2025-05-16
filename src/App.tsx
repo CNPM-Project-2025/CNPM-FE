@@ -9,6 +9,8 @@ import Payment from './components/pages/Payment'
 import NotificationToast from "./components/ui/NotificationToast";
 import AdminRoutes from './routes/AdminRoutes';
 import ThanhToan from './components/pages/ThanhToan'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -17,7 +19,7 @@ function App() {
       <div className="w-100">
         <NotificationToast />
         <Routes>
-          <Route path="/" element={<HomeMobile />} />
+          <Route path="/:tableId" element={<HomeMobile />} />
           <Route path="/home" element={<Home />} /> {/* Route cho trang chính */}
           <Route path="/thanh-toan" element={<ThanhToan />} />
           <Route path="/thanh-toan/the" element={<Payment />} /> {/* Route cho trang chính */}
@@ -25,6 +27,15 @@ function App() {
           <Route path="/admin/*" element={<AdminRoutes />} />
         </Routes>
       </div>
+       <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
     </>
   )
 }
