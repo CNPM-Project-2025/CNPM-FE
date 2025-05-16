@@ -14,6 +14,7 @@ import Category from '../components/pages/admin/Category';
 
 import { UserProvider } from "../context/UserContext";
 import Login from '../components/pages/admin/Login';
+import { TableComponent } from '../components/pages/admin/Table';
 
 
 const AdminRoutes = () => {
@@ -32,6 +33,7 @@ const AdminRoutes = () => {
           <Route path="account" element={<Account />} />
           <Route path='category' element={<Category />} />
           <Route path="import/create" element={<ImportCreate />} />
+          <Route path="invoice/table" element={<TableComponent />} />
         </Route>
         <Route path="login" element={<Login />} />
       </Routes>

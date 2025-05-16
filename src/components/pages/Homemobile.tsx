@@ -6,6 +6,11 @@ import { Button } from 'react-bootstrap';
 import '../../assets/styles/HomeMobile.css';
 import config from '../../config/config.ts';
 import { SyncLoader } from 'react-spinners';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import { TableType } from './admin/Table.tsx';
+// import 'react-toastify/dist/ReactToastify.css';
+
 
 function HomeMobile() {
     const url = config.API_URL;
@@ -18,8 +23,27 @@ function HomeMobile() {
     const [lastPage, setLastPage] = useState<number>(1);
     const [selectedCategory, setSelectedCategory] = useState<number>(0);
     const [isLoadingProduct, setIsLoadingProduct] = useState<boolean>(false);
+    const navigate = useNavigate();
 
+    const tableId = useParams().tableId;
+    const [Table, setTable] = useState<TableType | null>(null);
     // Fetch categories
+
+    const fetchTable = async () => {
+        try {
+            const response = await fetch(`${url}table/${tableId}`);
+            if (!response.ok) {
+                toast.error('Không tìm thấy bàn');
+                throw new Error('Failed to fetch table');
+            }
+
+            const data = await response.json();
+            setTable(data);
+        } catch (error) {
+            console.error('Error fetching table:', error);
+        }
+    }
+
     const fetchCategory = async () => {
         try {
             const response = await fetch(`${url}category`);
@@ -32,6 +56,7 @@ function HomeMobile() {
             }
         } catch (error) {
             console.error('Error fetching categories:', error);
+           
         }
     };
 
@@ -70,6 +95,7 @@ function HomeMobile() {
 
     // Consolidated useEffect hooks
     useEffect(() => {
+        fetchTable();
         fetchCategory();
     }, []);
 
@@ -113,12 +139,21 @@ function HomeMobile() {
         event.stopPropagation();
         event.preventDefault();
         console.log('click thanhtoan');
+        // chuyển sang trang thanh toán
+        navigate('/thanh-toan', {
+            state: {
+                // cart: cart,
+                Table: Table,
+            }
+        });
+
     };
 
     const handleClickBuy = (item: foodType, event: React.MouseEvent) => {
         event.stopPropagation();
         event.preventDefault();
         addToCart(item);
+        
     };
 
     const handleClickItem = (id: String, event: React.MouseEvent) => {
@@ -152,7 +187,7 @@ function HomeMobile() {
                         <HomeIcon />
                         <div>
                             Bạn đang ngồi bàn
-                            <span> Bàn 49</span>
+                            <span> {Table?.name}</span>
                         </div>
                     </div>
                 </div>
