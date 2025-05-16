@@ -74,6 +74,8 @@ export function ImportCreate() {
             throw new Error(data.message);
         }
         setFood(data.data);
+        setLastPage(data.lastPage);
+        console.log("lastPage", data.lastPage);
         setIsLoading(false);
     }
 
@@ -96,13 +98,17 @@ export function ImportCreate() {
     }, []);
 
     useEffect(() => {
+        console.log("lastPage", lastPage);
+    }, [lastPage]);
+
+    useEffect(() => {
         console.log("data", food);
     }, [food]);
 
     useEffect(() => {
         console.log(selectedCategory);
         fetchFood();
-    }, [selectedCategory]);
+    }, [selectedCategory, page, keyword]);
 
     // if (isLoadingProduct) {
     //     return <LoadingScreen />;
