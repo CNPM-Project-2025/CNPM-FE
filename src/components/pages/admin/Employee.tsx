@@ -149,6 +149,7 @@ function Employee() {
     }
     const data = await response.json();
     toast.success(`Thêm nhân viên thành công: ${data.message}`);
+    setConfigPassword('');
     setShowModal(false);
   }
 
