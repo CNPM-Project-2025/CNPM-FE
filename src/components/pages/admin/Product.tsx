@@ -110,7 +110,7 @@ function Product() {
     });
 
     const queryParams = new URLSearchParams(filteredParams);
-    const response = await fetch(`${url}food?${queryParams}`, {
+    const response = await fetch(`${url}food/all/?${queryParams}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -179,7 +179,10 @@ function Product() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${user?.access_token}`,
       },
-      body: JSON.stringify(food),
+      body: JSON.stringify({
+        ...food,
+        categoryId: food.category.id,
+      }),
     });
     const data = await response.json();
     if (response.ok) {
@@ -190,6 +193,9 @@ function Product() {
     }
   };
 
+  useEffect(() => {
+    console.log("UpdateProduct", UpdateProduct);
+  }, [UpdateProduct]);
 
 
 
@@ -218,7 +224,7 @@ function Product() {
     setUpdateProduct(prev => {
       if (!prev) return prev;
       let newValue: any = value;
-      if (name === 'sell_price' || name === 'import_price' || name === 'stock' || name === 'status') {
+      if (name === 'sell_price' || name === 'import_price' || name === 'stock' || name === 'status' || name === 'categoryId') {
         newValue = Number(value);
       }
       if (name === 'categoryId') {
