@@ -9,6 +9,7 @@ import { SyncLoader } from 'react-spinners';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { TableType } from './admin/Table.tsx';
+import socket from '../../socket.ts';
 // import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -56,13 +57,16 @@ function HomeMobile() {
             }
         } catch (error) {
             console.error('Error fetching categories:', error);
-           
+
         }
     };
 
     // Fetch food items
     const fetchFood = async (categoryId: number, keyword: string, pageNum: number = 1) => {
+        console.log('fetch food 1', categoryId, keyword, pageNum);
+        
         if (!categoryId) return;
+        console.log('fetch food', categoryId, keyword, pageNum);
         setIsLoadingProduct(true);
         try {
             const response = await fetch(
@@ -117,6 +121,23 @@ function HomeMobile() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [handleScroll]);
 
+    useEffect(() => {
+        socket.on('connect', () => {
+            console.log('Socket connected:', socket.id);
+        });
+
+        socket.on('food_updated', (data: any) => {
+            console.log('Food updated:', selectedCategory, keyword, page);
+            console.log('Food updated ksjkjd:', data);
+
+            fetchFood(selectedCategory, keyword, page);
+        });
+
+        return () => {
+            socket.off('connect');
+            socket.off('food_updated');
+        };
+    }, []);
     // useEffect(() => {
     //     if (ishowModal) {
     //         document.body.style.overflow = 'hidden';
@@ -153,7 +174,7 @@ function HomeMobile() {
         event.stopPropagation();
         event.preventDefault();
         addToCart(item);
-        
+
     };
 
     const handleClickItem = (id: String, event: React.MouseEvent) => {
