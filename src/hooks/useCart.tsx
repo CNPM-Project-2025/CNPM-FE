@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { flushSync } from "react-dom";
 let tax: number = 10 / 100;
 
-interface CartItem extends foodType {
+export interface CartItem extends foodType {
   quantity: number;
 }
 
@@ -72,6 +72,10 @@ export function useCart() {
         return item;
       })
     );
+  };
+
+  const getProductById = (id: number) => {
+    return cart.find((item) => item.id === id) || null;
   };
 
   // ➖ Giảm số lượng sản phẩm (nếu về 0 thì xóa)
@@ -145,5 +149,6 @@ export function useCart() {
     addToCartbySL,
     isLoading,
     clearCart,
+    getProductById,
   };
 }

@@ -1,8 +1,8 @@
 import { Home, HomeIcon, LucideShoppingCart, X, Search } from 'lucide-react'
 import { useEffect, useState, useCallback } from 'react';
 import { categoryType, foodType } from '../../types/ProductTpye';
-import { useCart } from '../../hooks/useCart.tsx';
-import { Button } from 'react-bootstrap';
+import { CartItem, useCart } from '../../hooks/useCart.tsx';
+import { Button, Modal } from 'react-bootstrap';
 import '../../assets/styles/HomeMobile.css';
 import config from '../../config/config.ts';
 import { SyncLoader } from 'react-spinners';
@@ -14,7 +14,7 @@ import { TableType } from './admin/Table.tsx';
 
 function HomeMobile() {
     const url = config.API_URL;
-    const { cart, addToCart, increaseQuantity, decreaseQuantity, getTotalPrice, isLoading } = useCart();
+    const { cart, addToCart, increaseQuantity, decreaseQuantity, getTotalPrice, isLoading, getProductById } = useCart();
     const [category, setCategory] = useState<categoryType[]>([]);
     const [food, setFood] = useState<foodType[]>([]);
     const [ishowModal, setShowModal] = useState(false);
@@ -23,6 +23,8 @@ function HomeMobile() {
     const [lastPage, setLastPage] = useState<number>(1);
     const [selectedCategory, setSelectedCategory] = useState<number>(0);
     const [isLoadingProduct, setIsLoadingProduct] = useState<boolean>(false);
+    const [isShowModal, setIsShowModal] = useState(false);
+    const [selectfood, setSelectFood] = useState<foodType | null>(null);
     const navigate = useNavigate();
 
     const tableId = useParams().tableId;
@@ -156,8 +158,15 @@ function HomeMobile() {
         
     };
 
-    const handleClickItem = (id: String, event: React.MouseEvent) => {
-        console.log('click item', id);
+    const handleClickItem = (item:foodType, event: React.MouseEvent) => {
+        console.log('click item', item);
+        event.stopPropagation();
+        setSelectFood(item);
+        // if (item.stock > 0) {
+        //     addToCart(item);
+        //     setSelectFood(getProductById(item.id));
+        // }
+        setIsShowModal(true);
     };
 
     const handleClickCategory = (id: number) => {
@@ -210,7 +219,7 @@ function HomeMobile() {
                                 <div
                                     className='home-content-item'
                                     key={i}
-                                    onClick={(e) => handleClickItem(`${i + 1}`, e)}
+                                    onClick={(e) => handleClickItem(item, e)}
                                 >
                                     <div>
                                         <img src={`${url}${item.image}`} alt="" />
@@ -314,8 +323,62 @@ function HomeMobile() {
                     </div>
                 )}
             </div>
+            {/* modal chi tiết sản phẩm */}
+            {/* <Modal show={isShowModal} onHide={() => setIsShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{selectfood?.name}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <img
+                        style={{ width: "100%", height: "auto" }}
+                        src={`${url}${selectfood?.image}`}
+                        alt=""
+                    />
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div className='cart-detail-item-name'>{selectfood?.name}</div>
+                        <div className='cart-detail-item-price'>
+                            {selectfood?.sell_price.toLocaleString()}
+                        </div>
+                    </div>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div className='d-flex justify-content-center align-items-center gap-3'>
+                            <button
+                                onClick={() => decreaseQuantity(selectfood?.id)}
+                                className='cart-detail-item-icon'
+                            >
+                                -
+                            </button>
+                            <span className='cart-detail-item-quantity'>
+                                {selectfood?.quantity}
+                            </span>
+                            <button
+                                onClick={() => increaseQuantity(selectfood?.id)}
+                                className='cart-detail-item-icon'
+                            >
+                                +
+                            </button>
+                        </div>
+                        <div className='cart-detail-item-price'>
+                            {selectfood?.sell_price.toLocaleString()}
+                        </div>
+                    </div>
+                    <div className='cart-detail-item-description'>
+                        {selectfood?.description}
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setIsShowModal(false)}>
+                        Đóng
+                    </Button>
+                    <Button variant="primary" onClick={() => handleClickBuy(selectfood, event)}>
+                        Thêm vào giỏ hàng
+                    </Button>
+                </Modal.Footer> 
+
+            </Modal> */}
         </div>
     );
 }
 
 export default HomeMobile;
+
