@@ -99,6 +99,29 @@ function HomeMobile() {
         }
     }, [page, lastPage, isLoadingProduct]);
 
+    //call staff
+    const handleCallStaff = () => {
+        if (!Table?.id) {
+            toast.error('Không xác định được bàn.');
+            return;
+        }
+        fetch(`${url}call-admin`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ tableId: Table.id }),
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Gọi nhân viên thất bại');
+                toast.success('Đã gọi nhân viên, vui lòng chờ!');
+            })
+            .catch(error => {
+                console.error('Error calling admin:', error);
+                toast.error('Gọi nhân viên thất bại');
+            });
+    };
+
     // Consolidated useEffect hooks
     useEffect(() => {
         fetchTable();
@@ -224,13 +247,14 @@ function HomeMobile() {
                                 <span> {Table?.name}</span>
                             </div>
                         </div>
-                        <button style={{border: "1px solid chocolate", borderRadius: "5px"}} className='p-1'>
+                        <button style={{ border: "1px solid chocolate", borderRadius: "5px" }} className='p-1'
+                        onClick={handleCallStaff} >
                             <div className='d-flex align-items-center gap-2'>
-                                <Phone color='chocolate'/>
-                                Gọi nhân viên 
+                                <Phone color='chocolate' />
+                                Gọi nhân viên
                             </div>
                         </button>
-                        
+
                     </div>
 
                 </div>
