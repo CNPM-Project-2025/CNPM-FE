@@ -157,7 +157,6 @@ function Product() {
     const response = await fetch(`${url}food/${id}/upload-image-food`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${user?.access_token}`,
       },
       body: formData,
