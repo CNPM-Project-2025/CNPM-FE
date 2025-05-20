@@ -7,6 +7,7 @@ import LoadingScreen from "../../common/LoadingScreen";
 import { Search } from "lucide-react";
 import config from '../../../config/config.ts';
 import { toast } from "react-toastify";
+import AdminSocketListener from './AdminSocketListener';
 
 
 
@@ -170,6 +171,7 @@ function Invoice() {
 
   return (
     <div>
+      <AdminSocketListener />
       <div>
         <Form
           className="d-flex gap-2 mb-3"

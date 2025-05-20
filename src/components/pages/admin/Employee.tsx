@@ -9,6 +9,8 @@ import LoadingScreen from "../../common/LoadingScreen";
 import { Search } from "lucide-react";
 import { toast } from "react-toastify";
 
+import AdminSocketListener from './AdminSocketListener';
+
 type Params = {
   page?: number | 1;
   items_per_page?: number | 10;
@@ -238,6 +240,7 @@ function Employee() {
   return (
     <div>
       <div>
+        <AdminSocketListener />
         <Form
           className="d-flex gap-2 mb-3"
           onSubmit={(e) => {

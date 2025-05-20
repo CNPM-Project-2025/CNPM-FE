@@ -5,6 +5,7 @@ import { useUser } from "../../../context/UserContext";
 import { foodType, categoryType } from "../../../types/ProductTpye";
 import config from '../../../config/config.ts';
 import LoadingScreen from "../../common/LoadingScreen";
+import AdminSocketListener from './AdminSocketListener';
 
 type createCategoryType = {
     name: string;
@@ -179,18 +180,7 @@ function Category() {
 
     return (
         <div>
-            <h1>Category</h1>
-
-            <div className="d-flex mb-3 gap-3">
-                <Button variant="primary" onClick={() => { setShowModal(true) }}>
-                    Thêm danh mục
-                </Button>
-                <Button variant="primary" onClick={() => { navigate('/admin/product') }}>
-                    Thông tin sản phẩm
-                </Button>
-            </div>
-
-            {/* Thêm nội dung cho trang danh mục */}
+            <AdminSocketListener />
             <Table striped bordered hover responsive>
                 <thead>
                     <tr>

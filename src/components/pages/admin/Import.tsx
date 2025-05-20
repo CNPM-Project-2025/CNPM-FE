@@ -6,6 +6,7 @@ import { ImportType, ImportTypeEnum } from "../../../types/ImportType";
 import LoadingScreen from "../../common/LoadingScreen";
 import { Search } from "lucide-react";
 import config from '../../../config/config.ts';
+import AdminSocketListener from './AdminSocketListener';
 
 
 type Option = {
@@ -204,6 +205,7 @@ function Import() {
 
   return (
     <div>
+      <AdminSocketListener />
       <div>
         <Form
           className="d-flex gap-2 mb-3"

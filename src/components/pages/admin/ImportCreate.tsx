@@ -7,6 +7,7 @@ import LoadingScreen from "../../common/LoadingScreen";
 import { Search } from "lucide-react";
 import config from '../../../config/config.ts';
 import { foodType, categoryType } from "../../../types/ProductTpye.ts";
+import AdminSocketListener from './AdminSocketListener';
 
 const url = config.API_URL;
 
@@ -116,6 +117,7 @@ export function ImportCreate() {
 
     return (
         <div className="w-100">
+            <AdminSocketListener />
             <h1>Import Create</h1>
             <div className="d-flex alisgn-items-center mb-3 w-100">
                 <div className="w-100 m-2">
