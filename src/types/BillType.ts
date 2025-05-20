@@ -16,11 +16,11 @@ export enum billStatusEnum {
     // enum('PLACED','PREPARING','SERVED','COMPLETED','CANCELLED') 
 
 export enum OrderStatusEnum {
-    PLACED = 'PLACED',
-    PREPARING = 'PREPARING',
-    SERVED = 'SERVED',
-    COMPLETED = 'COMPLETED',
-    CANCELLED = 'CANCELLED',
+    PLACED = 'PLACED', // đã đặt hàng
+    PREPARING = 'PREPARING', // đang chuẩn bị
+    SERVED = 'SERVED', // đã phục vụ
+    COMPLETED = 'COMPLETED', // đã hoàn thành
+    CANCELLED = 'CANCELLED', // đã hủy
 }
 
 export type orderDetails = {

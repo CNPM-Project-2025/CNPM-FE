@@ -608,8 +608,8 @@ function Product() {
           <Button variant="secondary" onClick={handleClose}>
             Hủy
           </Button>
-          <Button variant="primary" onClick={handleUpdate}>
-            Cập nhật
+          <Button variant="primary" onClick={handleAdd}>
+            Thêm
           </Button>
         </Modal.Footer>
       </Modal>

@@ -1,0 +1,43 @@
+name: Deploy to VPS with Docker
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS }}" | base64 -d > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 160.250.134.253 >> ~/.ssh/known_hosts
+
+      - name: Deploy and run Docker on VPS
+        run: |
+          ssh -i ~/.ssh/id_rsa root@160.250.134.253 << EOF
+            set -e
+
+            cd /home/cnpm/CNPM-FE || exit 1
+
+            echo "Pull latest code"
+            git pull origin main
+
+            echo "Build Docker image"
+            docker build -t my-react-frontend .
+
+            echo "Stop and remove old container if exists"
+            docker stop react-frontend || true
+            docker rm react-frontend || true
+
+            echo "Run new container with ENV file, mapping port 9999 to 9999"
+            docker run -d --name react-frontend -p 5173:5173 my-react-frontend
+
+            echo "Deployment completed"
+          EOF
