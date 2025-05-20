@@ -45,6 +45,27 @@ function ThanhToan() {
 
     const data: CardInfoType = location.state?.cardInfo;
 
+    const fetchQRcode = async (id: number) => {
+        const response = await fetch(`${url}payment/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "amount": 2000,
+                "orderCode" : id,
+            }),
+        });
+        if (!response.ok) {
+            toast.error('Tạo QR thất bại');
+            setIsLoading(false);
+            return;
+        }
+        const data = await response.json();
+        console.log('data', data);
+        return data;
+    }
+
     const fetchthanhtoan = async () => {
         setIsLoading(true);
         console.log('selectedPayment', selectedPayment);
@@ -74,12 +95,14 @@ function ThanhToan() {
         if (!response.ok) {
             toast.error('Thanh toán thất bại');
             setIsLoading(false);
-            return;
+            return false;
         }
-        toast.success('Thanh toán thành công');
+        
+        // toast.success('Thanh toán thành công');
         clearCart();
-        navigate(`/${Table?.id}`);
+        // navigate(`/${Table?.id}`);
         setIsLoading(false);
+        return response.json();
     }
 
     useEffect(() => {
@@ -94,18 +117,29 @@ function ThanhToan() {
         setSelectedPayment(paymentMethod);
     };
 
-    const handlethahtoan =  () => {
+    const handlethahtoan = async () => {
         if (selectedPayment === PaymentMethod.CARD) {
             if (data) {
-                fetchthanhtoan();   
+                const check = await fetchthanhtoan();   
+                if (check !== false){
+                    toast.success('Thanh toán thành công');
+                }
+                navigate(`/${Table?.id}`);
                 // toast.success('Thanh toán thành công');
             } else {
                 navigate('/thanh-toan/the', {
                     state: { cardInfo: data }
                 });
             }
-        } else {
-            fetchthanhtoan();
+        } else if (selectedPayment === PaymentMethod.BANK_TRANSFER){
+            const data = await fetchthanhtoan();
+            if (data !== false){
+                console.log('data', data);
+                // toast.success('Thanh toán thành công');
+                const response = await fetchQRcode(data.data.id);
+                // navigate(response.checkoutUrl);
+                window.location.href = response.checkoutUrl;
+            }
             // toast.success('Thanh toán thành công');
         }
     }

@@ -1,4 +1,4 @@
-import { Home, HomeIcon, LucideShoppingCart, X, Search } from 'lucide-react'
+import { Home, HomeIcon, LucideShoppingCart, X, Search, Phone } from 'lucide-react'
 import { useEffect, useState, useCallback } from 'react';
 import { categoryType, foodType } from '../../types/ProductTpye';
 import { CartItem, useCart } from '../../hooks/useCart.tsx';
@@ -9,8 +9,8 @@ import { SyncLoader } from 'react-spinners';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { TableType } from './admin/Table.tsx';
+import socket from '../../socket.ts';
 // import 'react-toastify/dist/ReactToastify.css';
-
 
 function HomeMobile() {
     const url = config.API_URL;
@@ -25,6 +25,7 @@ function HomeMobile() {
     const [isLoadingProduct, setIsLoadingProduct] = useState<boolean>(false);
     const [isShowModal, setIsShowModal] = useState(false);
     const [selectfood, setSelectFood] = useState<foodType | null>(null);
+    const [socketupdate, setSocketUpdate] = useState(false);
     const navigate = useNavigate();
 
     const tableId = useParams().tableId;
@@ -58,13 +59,16 @@ function HomeMobile() {
             }
         } catch (error) {
             console.error('Error fetching categories:', error);
-           
+
         }
     };
 
     // Fetch food items
     const fetchFood = async (categoryId: number, keyword: string, pageNum: number = 1) => {
+        console.log('fetch food 1', categoryId, keyword, pageNum);
+
         if (!categoryId) return;
+        console.log('fetch food', categoryId, keyword, pageNum);
         setIsLoadingProduct(true);
         try {
             const response = await fetch(
@@ -105,8 +109,11 @@ function HomeMobile() {
         if (selectedCategory !== 0) {
             setPage(1);
             fetchFood(selectedCategory, keyword, 1);
+            if (socketupdate) {
+                setSocketUpdate(false);
+            }
         }
-    }, [selectedCategory, keyword]);
+    }, [selectedCategory, keyword, socketupdate]);
 
     useEffect(() => {
         if (page > 1 && selectedCategory !== 0) {
@@ -119,6 +126,23 @@ function HomeMobile() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [handleScroll]);
 
+    useEffect(() => {
+        socket.on('connect', () => {
+            console.log('Socket connected:', socket.id);
+        });
+
+        socket.on('food_updated', (data: any) => {
+            console.log('Food updated:', selectedCategory, keyword, page);
+            console.log('Food updated ksjkjd:', data);
+            setSocketUpdate(true);
+            // fetchFood(3, keyword, page);
+        });
+
+        return () => {
+            socket.off('connect');
+            socket.off('food_updated');
+        };
+    }, []);
     // useEffect(() => {
     //     if (ishowModal) {
     //         document.body.style.overflow = 'hidden';
@@ -155,7 +179,7 @@ function HomeMobile() {
         event.stopPropagation();
         event.preventDefault();
         addToCart(item);
-        
+
     };
 
     const handleClickItem = (item:foodType, event: React.MouseEvent) => {
@@ -193,12 +217,22 @@ function HomeMobile() {
                         <button type="submit"><Search /></button>
                     </form>
                     <div className='home-info'>
-                        <HomeIcon />
-                        <div>
-                            Bạn đang ngồi bàn
-                            <span> {Table?.name}</span>
+                        <div className='d-flex align-items-center gap-2'>
+                            <HomeIcon />
+                            <div>
+                                Bạn đang ngồi bàn
+                                <span> {Table?.name}</span>
+                            </div>
                         </div>
+                        <button style={{border: "1px solid chocolate", borderRadius: "5px"}} className='p-1'>
+                            <div className='d-flex align-items-center gap-2'>
+                                <Phone color='chocolate'/>
+                                Gọi nhân viên 
+                            </div>
+                        </button>
+                        
                     </div>
+
                 </div>
                 <div className='doanhmuc-list'>
                     {category.map((item, i) => (
