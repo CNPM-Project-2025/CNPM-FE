@@ -141,6 +141,14 @@ function ThanhToan() {
                 window.location.href = response.checkoutUrl;
             }
             // toast.success('Thanh toán thành công');
+        } else {
+            const data = await fetchthanhtoan();
+            if (data !== false){
+                toast.success('Thanh toán thành công');
+                navigate(`/${Table?.id}`);
+            } else {
+                console.log('thanh toan that bai ');
+            }
         }
     }
 
